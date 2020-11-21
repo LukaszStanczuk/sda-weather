@@ -23,7 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LocalizationControllerTest {
+class LocalizationIntegrationTest {
+
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -56,10 +57,6 @@ class LocalizationControllerTest {
             assertThat(entry.getRegion()).isEqualTo("Pomorskie");
             assertThat(entry.getLatitude()).isEqualTo(22.00);
             assertThat(entry.getLongitude()).isEqualTo(22.00);
-
-
         });
-
-
     }
 }

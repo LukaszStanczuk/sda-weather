@@ -10,6 +10,7 @@ import javax.persistence.Id;
 @Entity
 @Data
 public class Localization {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

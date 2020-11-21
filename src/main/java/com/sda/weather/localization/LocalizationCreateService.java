@@ -40,5 +40,4 @@ public class LocalizationCreateService {
 
         return localizationRepository.save(localization);
     }
-
 }
