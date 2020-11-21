@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class LocalizationDTO {
     Long id;
     String city;
@@ -15,5 +14,4 @@ public class LocalizationDTO {
     String region;
     Double longitude;
     Double latitude;
-
 }

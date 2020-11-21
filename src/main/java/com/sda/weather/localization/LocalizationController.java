@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 public class LocalizationController {
+
     final LocalizationCreateService localizationCreateService;
-    final LocalizationMapper localizationMapper;
+//    final LocalizationMapper localizationMapper;
 
     @PostMapping("/localization")
     ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO){
-        return ResponseEntity.status(HttpStatus.CREATED).body()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(null); // todo
     }
 
 }
