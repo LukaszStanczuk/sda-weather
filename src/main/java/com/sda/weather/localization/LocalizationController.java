@@ -1,27 +1,36 @@
 package com.sda.weather.localization;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 public class LocalizationController {
 
     final LocalizationCreateService localizationCreateService;
-//    final LocalizationMapper localizationMapper;
+    final LocalizationMapper localizationMapper;
+    final LocalizationFetchService localizationFetchService;
 
     @PostMapping("/localization")
-    ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO){
+    ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO) {
+        String country = localizationDTO.getCountry();
+        String region = localizationDTO.getRegion();
+        String city = localizationDTO.getCity();
+        Double longitude = localizationDTO.getLongitude();
+        Double latitude = localizationDTO.getLatitude();
+        Localization newLocalization = localizationCreateService.createLocalization(country, region, city, longitude, latitude);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(null); // todo
+                .body(localizationMapper.mapToLocalizationDto(newLocalization));
     }
+
+    LocalizationDTO getLocalization(@PathVariable String id) {
+        Localization localization = localizationFetchService.fetchLocalization(id);
+        return localizationMapper.mapToLocalizationDto(localization);
+    }
+
 
 }

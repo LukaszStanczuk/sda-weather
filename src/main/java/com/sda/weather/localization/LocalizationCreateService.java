@@ -1,5 +1,6 @@
 package com.sda.weather.localization;
 
+import com.sda.weather.exception.BadrequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,20 @@ public class LocalizationCreateService {
                                     String region,
                                     Double longitude,
                                     Double latitude) {
-        if (city.isEmpty() && country.isEmpty() && region.isEmpty() && region.isEmpty() && longitude < 0 && latitude < 0) {
-//            throw new BadrequestException("Pola nie mogą być pustę a wartości poniżej 0"); // todo
+        if (city.isEmpty()) {
+            throw new BadrequestException("Pola nie mogą być puste");
+        }
+        if (country.isEmpty()) {
+            throw new BadrequestException("Pola nie mogą być puste");
+        }
+        if (region.isEmpty()) {
+            throw new BadrequestException("Pola nie mogą być puste");
+        }
+        if (longitude < -90 || longitude > 90) {
+            throw new BadrequestException("Pola nie mogą być poza zakresem");
+        }
+        if (latitude < -180 || latitude > 180) {
+            throw new BadrequestException("Pola nie mogą być poza zakresem");
         }
 
         Localization localization = new Localization();
