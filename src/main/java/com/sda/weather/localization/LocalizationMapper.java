@@ -8,9 +8,18 @@ public class LocalizationMapper {
         LocalizationDTO localizationDTO = new LocalizationDTO();
         localizationDTO.setCity(newLocalization.getCity());
         localizationDTO.setCountry(newLocalization.getCountry());
-        localizationDTO.setLatitude(newLocalization.getLatitude());
-        localizationDTO.setLongitude(newLocalization.getLongitude());
+
         localizationDTO.setId(newLocalization.getId());
         return localizationDTO;
+    }
+
+    Localization mapLocalization(LocalizationDefinition newLocalizationDefinition) {
+        Localization localization = new Localization();
+        localization.setCity(newLocalizationDefinition.getCity());
+        localization.setCountry(newLocalizationDefinition.getCountry());
+        localization.setRegion(newLocalizationDefinition.getRegion());
+        localization.setLatitude(newLocalizationDefinition.getLatitude());
+        localization.setLongitude(newLocalizationDefinition.getLongitude());
+        return localization;
     }
 }

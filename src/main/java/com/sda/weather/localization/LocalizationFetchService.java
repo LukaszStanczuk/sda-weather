@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class LocalizationFetchService {
     private final LocalizationRepository localizationRepository;
 
-    public Localization fetchLocalization(String id) {
-        return localizationRepository.findById(Long.valueOf(id)).orElseThrow(() -> new NotFoundException("Localization not find " + id));
+    public Localization fetchLocalization(Long id) {
+        return localizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Localization not find " + id));
     }
 }

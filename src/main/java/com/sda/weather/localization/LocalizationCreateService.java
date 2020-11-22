@@ -9,35 +9,33 @@ import org.springframework.stereotype.Component;
 public class LocalizationCreateService {
 
     final LocalizationRepository localizationRepository;
+    final LocalizationMapper localizationMapper;
 
-    Localization createLocalization(String city,
-                                    String country,
-                                    String region,
-                                    Double longitude,
-                                    Double latitude) {
-        if (city.isEmpty()) {
+    Localization createLocalization(LocalizationDefinition localizationDefinition) {
+        if (localizationDefinition.getCity().isBlank()) {
             throw new BadrequestException("Pola nie mogą być puste");
         }
-        if (country.isEmpty()) {
+        if (localizationDefinition.getCountry().isBlank()) {
             throw new BadrequestException("Pola nie mogą być puste");
         }
-        if (region.isEmpty()) {
+        if (localizationDefinition.getRegion().isBlank()) {
             throw new BadrequestException("Pola nie mogą być puste");
         }
-        if (longitude < -90 || longitude > 90) {
+        if (localizationDefinition.getLongitude() < -90 || localizationDefinition.getLongitude() > 90) {
             throw new BadrequestException("Pola nie mogą być poza zakresem");
         }
-        if (latitude < -180 || latitude > 180) {
+        if (localizationDefinition.getLatitude() < -180 || localizationDefinition.getLatitude() > 180) {
             throw new BadrequestException("Pola nie mogą być poza zakresem");
         }
 
-        Localization localization = new Localization();
-        localization.setCity(city);
-        localization.setCountry(country);
-        localization.setLatitude(latitude);
-        localization.setLongitude(longitude);
-        localization.setRegion(region);
+        LocalizationDefinition localization = LocalizationDefinition.builder()
+                .city(localizationDefinition.getCity())
+                .country(localizationDefinition.getCountry())
+                .region(localizationDefinition.getRegion())
+                .latitude(localizationDefinition.getLatitude())
+                .longitude(localizationDefinition.getLongitude()).build();
 
-        return localizationRepository.save(localization);
+
+        return localizationRepository.save(localizationMapper.mapLocalization(localization));
     }
 }
