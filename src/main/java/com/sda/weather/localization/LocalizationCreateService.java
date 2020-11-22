@@ -1,6 +1,6 @@
 package com.sda.weather.localization;
 
-import com.sda.weather.exception.BadRequestException;
+import com.sda.weather.exception.BadrequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,31 +9,30 @@ import org.springframework.stereotype.Component;
 public class LocalizationCreateService {
 
     final LocalizationRepository localizationRepository;
+    final LocalizationMapper localizationMapper;
 
     Localization createLocalization(LocalizationDefinition localizationDefinition) {
         if (localizationDefinition.getCity().isBlank()) {
-            throw new BadRequestException("Pola nie mogą być puste");
+            throw new BadrequestException("Pola nie mogą być puste");
         }
         if (localizationDefinition.getCountry().isBlank()) {
-            throw new BadRequestException("Pola nie mogą być puste");
-        }
-        if (localizationDefinition.getRegion().isBlank()) {     // todo remove
-            throw new BadRequestException("Pola nie mogą być puste");
+            throw new BadrequestException("Pola nie mogą być puste");
         }
         if (localizationDefinition.getLongitude() < -90 || localizationDefinition.getLongitude() > 90) {
-            throw new BadRequestException("Pola nie mogą być poza zakresem");
+            throw new BadrequestException("Pola nie mogą być poza zakresem");
         }
         if (localizationDefinition.getLatitude() < -180 || localizationDefinition.getLatitude() > 180) {
-            throw new BadRequestException("Pola nie mogą być poza zakresem");
+            throw new BadrequestException("Pola nie mogą być poza zakresem");
         }
 
-        Localization localization = new Localization();
-        localization.setCity(localizationDefinition.getCity());
-        localization.setCountry(localizationDefinition.getCountry());
-        localization.setRegion(localizationDefinition.getRegion());     // todo add a check
-        localization.setLatitude(localizationDefinition.getLatitude());
-        localization.setLongitude(localizationDefinition.getLongitude());
+        LocalizationDefinition localization = LocalizationDefinition.builder()
+                .city(localizationDefinition.getCity())
+                .country(localizationDefinition.getCountry())
+                .region(localizationDefinition.getRegion())
+                .latitude(localizationDefinition.getLatitude())
+                .longitude(localizationDefinition.getLongitude()).build();
 
-        return localizationRepository.save(localization);
+
+        return localizationRepository.save(localizationMapper.mapLocalization(localization));
     }
 }
