@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,14 +20,7 @@ public class LocalizationController {
 
     @PostMapping("/localization")
     ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO) {
-        LocalizationDefinition localizationDefinition = LocalizationDefinition.builder()    // todo move to the localizationMapper
-                .country(localizationDTO.getCountry())
-                .region(localizationDTO.getRegion())
-                .city(localizationDTO.getCity())
-                .longitude(localizationDTO.getLatitude())
-                .latitude(localizationDTO.getLongitude())   // todo switch values
-                .build();
-
+        LocalizationDefinition localizationDefinition = localizationMapper.mapToLocalisationDefinition(localizationDTO);    // todo move to the localizationMapper
         Localization newLocalization = localizationCreateService.createLocalization(localizationDefinition);
 
         return ResponseEntity
@@ -43,7 +37,11 @@ public class LocalizationController {
     @GetMapping("/localization")
     List<LocalizationDTO> getAllLocalization() {
         List<Localization> localizationList = localizationGetAllService.getAll();
+
+
         // todo use .stream().map(...) use localizationMapper.mapToLocalizationDto
-        return Collections.emptyList();
+        return localizationList.stream().map(l -> localizationMapper
+                .mapToLocalizationDto(l))
+                .collect(Collectors.toList());
     }
 }
