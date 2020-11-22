@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandlerController {
-    @ExceptionHandler(BadrequestException.class)
-    @ResponseStatus()
-    void badRequestHandler(BadrequestException exception) {
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus() // todo specify status code HttpStatus.BAD_REQUEST
+    void badRequestHandler(BadRequestException exception) {
         log.error(exception.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus()
+    @ResponseStatus() // todo specify status code
     void notFoundExceptionHandler(NotFoundException exception) {
         log.error(exception.getMessage());
     }

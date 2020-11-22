@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -18,9 +19,13 @@ public class LocalizationController {
 
     @PostMapping("/localization")
     ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO) {
-        LocalizationDefinition localizationDefinition = LocalizationDefinition.builder()
-                .country(localizationDTO.getCountry()).region(localizationDTO.getRegion())
-                .city(localizationDTO.getCity()).longitude(localizationDTO.getLatitude()).latitude(localizationDTO.getLongitude()).build();
+        LocalizationDefinition localizationDefinition = LocalizationDefinition.builder()    // todo move to the localizationMapper
+                .country(localizationDTO.getCountry())
+                .region(localizationDTO.getRegion())
+                .city(localizationDTO.getCity())
+                .longitude(localizationDTO.getLatitude())
+                .latitude(localizationDTO.getLongitude())   // todo switch values
+                .build();
 
         Localization newLocalization = localizationCreateService.createLocalization(localizationDefinition);
 
@@ -36,10 +41,9 @@ public class LocalizationController {
     }
 
     @GetMapping("/localization")
-    List<Localization> getAllLocalization() {
+    List<LocalizationDTO> getAllLocalization() {
         List<Localization> localizationList = localizationGetAllService.getAll();
-        return localizationList;
+        // todo use .stream().map(...) use localizationMapper.mapToLocalizationDto
+        return Collections.emptyList();
     }
-
-
 }

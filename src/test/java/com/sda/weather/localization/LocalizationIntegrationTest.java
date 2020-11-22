@@ -29,10 +29,10 @@ class LocalizationIntegrationTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void createLocalizationIntegrationTest() throws Exception {
+    void createLocalization_returns201StatusCodeAndSavesNewEntity() throws Exception {
         //given
         localizationRepository.deleteAll();
-        LocalizationDTO localizationDTO = new LocalizationDTO(null, "Gdansk", "Gdansk", "Pomorskie", 22.00, 22.00);
+        LocalizationDTO localizationDTO = new LocalizationDTO(null, "Gdansk", "Poland", "Pomorskie", 40.00, 22.00);
         String request = objectMapper.writeValueAsString(localizationDTO);
         MockHttpServletRequestBuilder post = post("/localization")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -47,10 +47,38 @@ class LocalizationIntegrationTest {
         List<Localization> entries = localizationRepository.findAll();
         assertThat(entries.size()).isEqualTo(1);
         assertThat(entries.get(0)).satisfies(entry -> {
+            assertThat(entry.getLongitude()).isEqualTo(40.00);
             assertThat(entry.getLatitude()).isEqualTo(22.00);
-            assertThat(entry.getLongitude()).isEqualTo(22.00);
             assertThat(entry.getCity()).isEqualTo("Gdansk");
+            assertThat(entry.getCountry()).isEqualTo("Poland");
+            assertThat(entry.getRegion()).isEqualTo("Pomorskie");
+        });
+    }
 
+    @Test
+    void createLocalization_whenRegionIsBlank_returns201StatusCodeAndSavesNewEntity() throws Exception {
+        //given
+        localizationRepository.deleteAll();
+        LocalizationDTO localizationDTO = new LocalizationDTO(null, "Gdansk", "Poland", "   ", 40.00, 22.00);
+        String request = objectMapper.writeValueAsString(localizationDTO);
+        MockHttpServletRequestBuilder post = post("/localization")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(request);
+
+        //when
+        MvcResult result = mockMvc.perform(post).andReturn();
+
+        //then
+        MockHttpServletResponse response = result.getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        List<Localization> entries = localizationRepository.findAll();
+        assertThat(entries.size()).isEqualTo(1);
+        assertThat(entries.get(0)).satisfies(entry -> {
+//            assertThat(entry.getLongitude()).isEqualTo(40.00);
+//            assertThat(entry.getLatitude()).isEqualTo(22.00);
+            assertThat(entry.getCity()).isEqualTo("Gdansk");
+            assertThat(entry.getCountry()).isEqualTo("Poland");
+            assertThat(entry.getRegion()).isNull();
         });
     }
 }
