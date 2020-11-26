@@ -22,27 +22,29 @@ public class ForecastConnection {
         objectMapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public void getForecast() {
+    public ForecastDto getForecast() {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(API_URL, String.class);
         if (!responseEntity.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("unable to connect to server");
         }
         String responseEntityBody = responseEntity.getBody();
 
+        ForecastDto forecastDto;
         try {
-            ForecastDto forecastDto = objectMapper.readValue(responseEntityBody, ForecastDto.class);
+            forecastDto = objectMapper.readValue(responseEntityBody, ForecastDto.class);
             String airPressure = forecastDto.getAirPressure();
             String humidity = forecastDto.getHumidity();
             String temperature = forecastDto.getTemperature();
             String windDirect = forecastDto.getWindDirect();
             String windSpeed = forecastDto.getWindSpeed();
-            System.out.println(windDirect);
+
 
         } catch (JsonProcessingException e) {
             throw new RuntimeException("incorrect data reading");
         }
 
 
+        return forecastDto;
     }
 
 

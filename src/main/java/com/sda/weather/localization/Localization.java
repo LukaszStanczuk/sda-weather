@@ -1,13 +1,13 @@
 package com.sda.weather.localization;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sda.weather.weather.Forecast;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,4 +23,8 @@ public class Localization {
     String region;
     Double longitude;
     Double latitude;
+
+    @OneToMany(mappedBy = "localizations")
+    private List<Forecast> forecasts;
+
 }

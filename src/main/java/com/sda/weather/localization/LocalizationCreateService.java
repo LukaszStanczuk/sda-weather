@@ -33,7 +33,7 @@ public class LocalizationCreateService {
         localization.setLongitude(localizationDefinition.getLongitude());
 
         String region = localizationDefinition.getRegion();// todo add a check//ok
-        Optional.ofNullable(region).filter(l -> l.isBlank()).ifPresent(localization::setRegion);
+        Optional.ofNullable(region).filter(l -> !l.isBlank()).ifPresent(localization::setRegion);
 
         return localizationRepository.save(localization);
     }
