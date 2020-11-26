@@ -27,7 +27,7 @@ public class LocalizationCreateService {
         Localization localization = new Localization();
         localization.setCity(localizationDefinition.getCity());
         localization.setCountry(localizationDefinition.getCountry());
-        localization.setRegion(localizationDefinition.getRegion());     // todo add a check
+        localization.setRegion(localizationDefinition.getRegion());     // todo if the region contains whitespaces, do not save it to the database (we will store null) -> LocalizationIntegrationTest:81 (line 81)
         localization.setLatitude(localizationDefinition.getLatitude());
         localization.setLongitude(localizationDefinition.getLongitude());
 

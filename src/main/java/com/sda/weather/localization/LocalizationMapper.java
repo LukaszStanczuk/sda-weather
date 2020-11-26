@@ -16,7 +16,6 @@ public class LocalizationMapper {
     }
 
     LocalizationDefinition mapToLocalisationDefinition(LocalizationDTO DTO) {
-
         return LocalizationDefinition.builder()
                 .city(DTO.getCity())
                 .longitude(DTO.getLongitude())

@@ -74,11 +74,13 @@ class LocalizationIntegrationTest {
         List<Localization> entries = localizationRepository.findAll();
         assertThat(entries.size()).isEqualTo(1);
         assertThat(entries.get(0)).satisfies(entry -> {
-//            assertThat(entry.getLongitude()).isEqualTo(40.00);
-//            assertThat(entry.getLatitude()).isEqualTo(22.00);
+            assertThat(entry.getLongitude()).isEqualTo(40.00);
+            assertThat(entry.getLatitude()).isEqualTo(22.00);
             assertThat(entry.getCity()).isEqualTo("Gdansk");
             assertThat(entry.getCountry()).isEqualTo("Poland");
-            assertThat(entry.getRegion()).isNull();
+            assertThat(entry.getRegion()).isNull(); // todo this test not pass because of it
         });
     }
+
+    // todo let's develop integration tests for obtaining locations
 }
