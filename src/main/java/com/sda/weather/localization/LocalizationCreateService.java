@@ -4,6 +4,8 @@ import com.sda.weather.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class LocalizationCreateService {
@@ -27,9 +29,11 @@ public class LocalizationCreateService {
         Localization localization = new Localization();
         localization.setCity(localizationDefinition.getCity());
         localization.setCountry(localizationDefinition.getCountry());
-        localization.setRegion(localizationDefinition.getRegion());     // todo add a check
         localization.setLatitude(localizationDefinition.getLatitude());
         localization.setLongitude(localizationDefinition.getLongitude());
+
+        String region = localizationDefinition.getRegion();
+        Optional.ofNullable(region).filter(l -> !l.isBlank()).ifPresent(localization::setRegion);
 
         return localizationRepository.save(localization);
     }

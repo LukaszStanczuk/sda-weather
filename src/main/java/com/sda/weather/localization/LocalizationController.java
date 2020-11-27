@@ -16,11 +16,11 @@ public class LocalizationController {
     final LocalizationCreateService localizationCreateService;
     final LocalizationMapper localizationMapper;
     final LocalizationFetchService localizationFetchService;
-    final LocalizationGetAllService localizationGetAllService;
+
 
     @PostMapping("/localization")
     ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO) {
-        LocalizationDefinition localizationDefinition = localizationMapper.mapToLocalisationDefinition(localizationDTO);    // todo move to the localizationMapper
+        LocalizationDefinition localizationDefinition = localizationMapper.mapToLocalisationDefinition(localizationDTO);
         Localization newLocalization = localizationCreateService.createLocalization(localizationDefinition);
 
         return ResponseEntity
@@ -36,10 +36,9 @@ public class LocalizationController {
 
     @GetMapping("/localization")
     List<LocalizationDTO> getAllLocalization() {
-        List<Localization> localizationList = localizationGetAllService.getAll();
+        List<Localization> localizationList = localizationFetchService.getAll();
 
 
-        // todo use .stream().map(...) use localizationMapper.mapToLocalizationDto
         return localizationList.stream().map(l -> localizationMapper
                 .mapToLocalizationDto(l))
                 .collect(Collectors.toList());
