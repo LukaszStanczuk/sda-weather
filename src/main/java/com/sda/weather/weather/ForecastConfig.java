@@ -6,11 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @Data
 @ConfigurationProperties("com.sda.weather.api")
-public class ForecastConfig {
+class ForecastConfig {
 
-    String apiKey;
-    String uri;
-    String language;
-    String units;
-
+    private String apiKey;
+    private String uri;
+    private String language;
+    private String units;
 }

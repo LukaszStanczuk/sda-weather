@@ -1,6 +1,5 @@
 package com.sda.weather.localization;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sda.weather.weather.Forecast;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +24,5 @@ public class Localization {
     Double latitude;
 
     @OneToMany(mappedBy = "localizations")
-    private List<Forecast> forecasts;
-
+    private List<Forecast> forecasts;           // todo is it necessary?
 }

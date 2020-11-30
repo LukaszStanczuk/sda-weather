@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ForecastDefinition {
+class ForecastDefinition {
     String temperature;
     String humidity;
     String windSpeed;
