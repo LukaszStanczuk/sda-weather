@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 class ForecastService {
 
     private final LocalizationFetchService localizationFetchService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     RestTemplate restTemplate = new RestTemplate();
 
     Forecast getForecast(Long id, String period) {
@@ -31,7 +31,6 @@ class ForecastService {
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String response = entity.getBody();
 
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         if (!entity.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("unable to connect to server");
         }

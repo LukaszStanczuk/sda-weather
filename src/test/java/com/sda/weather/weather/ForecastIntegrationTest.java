@@ -29,6 +29,6 @@ class ForecastIntegrationTest {
         forecastRepository.deleteAll();
         ForecastDto forecastDto = new ForecastDto(null, "23", "duża", "22", "44", "wschód");
         String request = objectMapper.writeValueAsString(forecastDto);
-        MockHttpServletRequestBuilder post = post("/");
+        MockHttpServletRequestBuilder post = post("localization/{id}/forecast");
     }
 }
