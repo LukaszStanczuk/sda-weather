@@ -23,6 +23,4 @@ public class Localization {
     Double longitude;
     Double latitude;
 
-    @OneToMany(mappedBy = "localizations")
-    private List<Forecast> forecasts;           // todo is it necessary?
 }
