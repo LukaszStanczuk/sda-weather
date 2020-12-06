@@ -1,7 +1,6 @@
 package com.sda.weather.weather;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sda.weather.localization.Localization;
 import com.sda.weather.localization.LocalizationFetchService;
@@ -19,7 +18,7 @@ class ForecastService {
     private final ObjectMapper objectMapper;
     RestTemplate restTemplate = new RestTemplate();
 
-    Forecast getForecast(Long id, String period) {
+    Forecast getForecast(Long id, Integer period) {
         Localization localization = localizationFetchService.fetchLocalization(id);
         String cityName = localization.getCity();
 
@@ -36,7 +35,9 @@ class ForecastService {
         }
         try {
             ForecastOpenWeather forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
-            System.out.println(forecastOpenWeather.getList().get(1).getDate());
+            ForecastOpenWeather.Wind wind = forecastOpenWeather.getList().get(1).getWind();
+            wind.getSpeed();
+
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
