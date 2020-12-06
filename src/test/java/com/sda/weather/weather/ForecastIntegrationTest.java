@@ -38,7 +38,6 @@ class ForecastIntegrationTest {
         savedLocalization = localizationRepository.save(localization);
     }
 
-
     @Test
     void getForecast_returns200StatusCodeAndSaveNewEntity() throws Exception {
         //given
@@ -57,8 +56,10 @@ class ForecastIntegrationTest {
         Long id = savedLocalization.getId();
         MockHttpServletRequestBuilder request = get("/localization/" + id + "/forecast?period=6")
                 .contentType(MediaType.APPLICATION_JSON);
+
         //when
         MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -69,8 +70,10 @@ class ForecastIntegrationTest {
         Long id = savedLocalization.getId();
         MockHttpServletRequestBuilder request = get("/localization/" + id + "/forecast?period=0")
                 .contentType(MediaType.APPLICATION_JSON);
+
         //when
         MockHttpServletResponse response = mockMvc.perform(request).andReturn().getResponse();
+
         //then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }

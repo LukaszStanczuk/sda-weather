@@ -29,10 +29,7 @@ class ForecastController {
 
     @GetMapping("localization/{id}/forecast")
     ResponseEntity<ForecastDto> getForecastByIdLocalization(@PathVariable Long id, @RequestParam(defaultValue = "1") @Min(1) @Max(5) Integer period) {
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(forecastMapper.mapToForecastDto(forecastService.getForecast(id, period)));
     }
-
-
 }

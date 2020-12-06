@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ForecastOpenWeather {
+
     private List<SingleForecast> list;
 
     @Data
