@@ -45,7 +45,7 @@ class ForecastService {
             ForecastOpenWeather forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
             LocalDate now = LocalDate.now();
             LocalDate forecacastDate = now.plusDays(period);
-            LocalDateTime localDateTime = forecacastDate.atTime(12, 00);
+            LocalDateTime localDateTime = forecacastDate.atTime(12, 00, 00);
 
 
             forecastOpenWeather.getList()
