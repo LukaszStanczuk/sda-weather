@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 class ForecastDto {
 
-    private Long id;                // todo unnecessary
     private String temperature;
     private String humidity;
     private String windSpeed;

@@ -2,6 +2,7 @@ package com.sda.weather.weather;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sda.weather.exception.BadRequestException;
 import com.sda.weather.localization.Localization;
 import com.sda.weather.localization.LocalizationFetchService;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 class ForecastService {
 
     private final LocalizationFetchService localizationFetchService;
     private final ObjectMapper objectMapper;
-    RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     Forecast getForecast(Long id, Integer period) {
         Localization localization = localizationFetchService.fetchLocalization(id);
@@ -35,8 +41,27 @@ class ForecastService {
         }
         try {
             ForecastOpenWeather forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
-            ForecastOpenWeather.Wind wind = forecastOpenWeather.getList().get(1).getWind();
-            wind.getSpeed();
+            LocalDate now = LocalDate.now();
+            LocalDate forecacastDate = now.plusDays(period);
+            LocalDateTime localDateTime = forecacastDate.atTime(12, 00);
+
+
+            Optional<Integer> first = forecastOpenWeather.getList()
+                    .stream().map(sf -> sf.getDate()).map(sf -> sf.compareTo(String.valueOf(localDateTime))).findFirst();
+            System.out.println(first);
+//                    .map(s -> s.getWind())
+//                    .map(s -> s.getSpeed())
+//                    .findFirst()
+//                    .orElseThrow(() -> new BadRequestException("nie ma takich danych"));
+            forecastOpenWeather.getList()
+                    .stream()
+                    .map(s -> s.getWind())
+                    .map(s -> s.getDeg())
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException("nie ma takich danych"));
+//            forecastOpenWeather.getList()
+//                    .stream()
+//                    .map(singleForecast -> singleForecast.getMain());
 
 
         } catch (JsonProcessingException e) {

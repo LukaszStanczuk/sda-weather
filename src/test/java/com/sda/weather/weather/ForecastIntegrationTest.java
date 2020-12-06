@@ -24,11 +24,14 @@ class ForecastIntegrationTest {
     MockMvc mockMvc;
     @Autowired
     LocalizationRepository localizationRepository;
+    @Autowired
+    ForecastRepository forecastRepository;
 
     Localization savedLocalization;
 
     @BeforeEach
     void setUp() {
+        forecastRepository.deleteAll();
         localizationRepository.deleteAll();
         Localization localization = new Localization();
         localization.setCity("Warsaw");
