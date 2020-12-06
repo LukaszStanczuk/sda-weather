@@ -2,6 +2,7 @@ package com.sda.weather.weather;
 
 public class ForecastKelvinToCelsius {
     public double convertKelvintoCelcius(double value) {
-        return value - 273.15;
+        double degreeToConvert = 273.15;
+        return value - degreeToConvert;
     }
 }

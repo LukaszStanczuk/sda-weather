@@ -31,7 +31,9 @@ class ForecastService {
         String url = UriComponentsBuilder.newInstance()
                 .scheme("http").host("api.openweathermap.org/data/2.5/forecast")
                 .queryParam("q", cityName)
-                .queryParam("appid", "3b26fcb0c4ae6a52325337d9a0f3690b").build().toUriString();
+                .queryParam("appid", "3b26fcb0c4ae6a52325337d9a0f3690b")
+                .queryParam("units", "metric")
+                .build().toUriString();
 
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String response = entity.getBody();
@@ -46,9 +48,9 @@ class ForecastService {
             LocalDateTime localDateTime = forecacastDate.atTime(12, 00);
 
 
-            Optional<Integer> first = forecastOpenWeather.getList()
-                    .stream().map(sf -> sf.getDate()).map(sf -> sf.compareTo(String.valueOf(localDateTime))).findFirst();
-            System.out.println(first);
+            forecastOpenWeather.getList()
+                    .stream().map(sf -> sf.getDate()).equals(localDateTime);
+
 //                    .map(s -> s.getWind())
 //                    .map(s -> s.getSpeed())
 //                    .findFirst()
