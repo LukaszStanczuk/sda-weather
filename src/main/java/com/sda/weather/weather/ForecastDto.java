@@ -5,15 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 class ForecastDto {
 
-    private String temperature;
-    private String humidity;
-    private String windSpeed;
-    private String airPressure;
-    private String windDirect;
+    private Instant forecastDate;
+    private float temperature;
+    private int humidity;
+    private double windSpeed;
+    private int airPressure;
+    private double windDirect;
 }

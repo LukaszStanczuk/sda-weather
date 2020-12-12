@@ -12,8 +12,9 @@ public class ForecastOpenWeather {
 
     @Data
     public static class SingleForecast {
-        private Wind wind;
         private Main main;
+        private Wind wind;
+
         @JsonProperty("dt_txt")
         private String date;
     }
@@ -25,8 +26,8 @@ public class ForecastOpenWeather {
     }
 
     @Data
-    private static class Main {
-        private double temp;
+    public static class Main {
+        private float temp;
         private int pressure;
         private int humidity;
     }

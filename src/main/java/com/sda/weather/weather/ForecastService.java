@@ -2,7 +2,6 @@ package com.sda.weather.weather;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sda.weather.exception.BadRequestException;
 import com.sda.weather.localization.Localization;
 import com.sda.weather.localization.LocalizationFetchService;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +20,7 @@ import java.util.Optional;
 class ForecastService {
 
     private final LocalizationFetchService localizationFetchService;
+    private final ForecastRepository forecastRepository;
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
 
@@ -41,37 +41,45 @@ class ForecastService {
         if (!entity.getStatusCode().is2xxSuccessful()) {
             throw new RuntimeException("unable to connect to server");
         }
+
+        ForecastOpenWeather forecastOpenWeather = null;
         try {
-            ForecastOpenWeather forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
+            forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
             LocalDate now = LocalDate.now();
             LocalDate forecacastDate = now.plusDays(period);
             LocalDateTime localDateTime = forecacastDate.atTime(12, 00, 00);
+            List<ForecastOpenWeather.SingleForecast> singleForecasts = forecastOpenWeather.getList();
+            return singleForecasts.stream()
+                    .filter(sf -> maptoLocalDateTime(sf.getDate()).isEqual(localDateTime))
+                    .map(sf -> mapToForecast(sf))
+                    .findFirst();
 
+        } catch (JsonProcessingException jsonProcessingException) {
+            jsonProcessingException.printStackTrace();
 
-            forecastOpenWeather.getList()
-                    .stream().map(sf -> sf.getDate()).equals(localDateTime);
-
-//                    .map(s -> s.getWind())
-//                    .map(s -> s.getSpeed())
-//                    .findFirst()
-//                    .orElseThrow(() -> new BadRequestException("nie ma takich danych"));
-            forecastOpenWeather.getList()
-                    .stream()
-                    .map(s -> s.getWind())
-                    .map(s -> s.getDeg())
-                    .findFirst()
-                    .orElseThrow(() -> new BadRequestException("nie ma takich danych"));
-//            forecastOpenWeather.getList()
-//                    .stream()
-//                    .map(singleForecast -> singleForecast.getMain());
-
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
         }
-        return new Forecast();
-
-
+        return ()
     }
 
+
+    private Forecast mapToForecast(ForecastOpenWeather.SingleForecast singleForecast) {
+        LocalDateTime forecastDate = maptoLocalDateTime(singleForecast.getDate());
+        Instant forecastDateInstant = forecastDate.atZone(ZoneId.systemDefault()).toInstant();
+
+        Forecast forecast = new Forecast();
+        forecast.setWindSpeed(singleForecast.getWind().getSpeed());
+        forecast.setWindDirect(singleForecast.getWind().getDeg());
+        forecast.setTemperature(singleForecast.getMain().getTemp());
+        forecast.setHumidity(singleForecast.getMain().getHumidity());
+        forecast.setAirPressure(singleForecast.getMain().getPressure());
+        forecast.setForecastDate(forecastDateInstant);
+        return forecast;
+    }
+
+    private LocalDateTime maptoLocalDateTime(String date) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date, dateTimeFormatter);
+    }
 }
+
+

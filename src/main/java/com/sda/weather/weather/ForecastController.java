@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +29,7 @@ class ForecastController {
 //    }
 
     @GetMapping("localization/{id}/forecast")
-    ResponseEntity<ForecastDto> getForecastByIdLocalization(@PathVariable Long id, @RequestParam(defaultValue = "1") @Min(1) @Max(5) Integer period) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(forecastMapper.mapToForecastDto(forecastService.getForecast(id, period)));
+    ForecastDto getForecastByIdLocalization(@PathVariable Long id, @RequestParam(defaultValue = "1") @Min(1) @Max(5) Integer period) {
+        return forecastMapper.mapToForecastDto(forecastService.getForecast(id, period));
     }
 }

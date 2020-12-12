@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -16,11 +17,12 @@ public class Forecast {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String temperature;
-    private String humidity;
-    private String windSpeed;
-    private String airPressure;
-    private String windDirect;
+    private Instant forecastDate;
+    private float temperature;
+    private int humidity;
+    private double windSpeed;
+    private int airPressure;
+    private double windDirect;
     @ManyToOne
     private Localization localizations;
 }

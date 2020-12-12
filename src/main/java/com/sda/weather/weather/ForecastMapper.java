@@ -2,7 +2,9 @@ package com.sda.weather.weather;
 
 import org.springframework.stereotype.Component;
 
+
 @Component
+
 public class ForecastMapper {
     ForecastDto mapToForecastDto(Forecast forecast) {
         return ForecastDto.builder()
@@ -13,4 +15,6 @@ public class ForecastMapper {
                 .airPressure(forecast.getAirPressure())
                 .build();
     }
+
+
 }
