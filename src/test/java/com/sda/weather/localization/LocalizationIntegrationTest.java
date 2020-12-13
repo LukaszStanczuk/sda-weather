@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
@@ -61,7 +62,7 @@ class LocalizationIntegrationTest {
         localizationRepository.deleteAll();
         LocalizationDTO localizationDTO = new LocalizationDTO(null, "Gdansk", "Poland", "   ", 40.00, 22.00);
         String request = objectMapper.writeValueAsString(localizationDTO);
-        MockHttpServletRequestBuilder post = post("/localization")
+        MockHttpServletRequestBuilder post = post("/localization").with(user("luk").roles("ADMIN"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request);
 

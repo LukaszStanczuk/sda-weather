@@ -3,6 +3,7 @@ package com.sda.weather.localization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class LocalizationController {
     final LocalizationMapper localizationMapper;
     final LocalizationFetchService localizationFetchService;
 
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/localization")
     ResponseEntity<LocalizationDTO> createLocalization(@RequestBody LocalizationDTO localizationDTO) {
         LocalizationDefinition localizationDefinition = localizationMapper.mapToLocalisationDefinition(localizationDTO);
