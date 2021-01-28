@@ -13,6 +13,11 @@ public class LocalizationFetchService {
 
     public Localization fetchLocalization(Long id) {
         return localizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Localization not find " + id));
+
+    }
+
+    public List<Localization> getAll() {
+        return localizationRepository.findAll();
     }
 
     public List<Localization> getAll() {

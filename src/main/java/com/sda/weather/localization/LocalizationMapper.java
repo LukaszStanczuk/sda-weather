@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LocalizationMapper {
-    LocalizationDTO mapToLocalizationDto(Localization newLocalization) {
+    public LocalizationDTO mapToLocalizationDto(Localization newLocalization) {
         LocalizationDTO localizationDTO = new LocalizationDTO();
         localizationDTO.setCity(newLocalization.getCity());
         localizationDTO.setCountry(newLocalization.getCountry());
