@@ -1,61 +1,35 @@
 package com.sda.weather.weather;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.sda.weather.exception.WrongDataException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ForecastWindDirectionMapper {
 
-    List<QuadrantItem> quadrants;
-    String[] QuadrantNames = new String[]{"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
+    String directCalculate(String windDirection) {
+        Double degree = Double.parseDouble(windDirection);
 
-    ForecastWindDirectionMapper() {
-        double leftValue = 360 - 22.5;
-        double rightValue = 22.5;
-        double step = 45;
-        quadrants = new ArrayList<QuadrantItem>();
-        for (String qname : QuadrantNames) {
-            QuadrantItem quadrantItem = null;
-            if (qname == "N")
-                quadrantItem = new QuadrantItem(qname, leftValue, rightValue, "or");
-            else {
-                leftValue = rightValue;
-                rightValue = leftValue + step;
-                quadrantItem = new QuadrantItem(qname, leftValue, rightValue, "and");
-            }
-            quadrants.add(quadrantItem);
+        if (degree >= 0 && degree <= 33.45 || degree >= 337.30 && degree <= 360) {
+            return "N";
+        } else if (degree > 33.45 && degree < 67.30) {
+            return "NE";
+        } else if (degree >= 67.30 && degree <= 112.30) {
+            return "E";
+        } else if (degree > 112.30 && degree < 157.30) {
+            return "SE";
+        } else if (degree >= 157.30 && degree <= 202.30) {
+            return "S";
+        } else if (degree > 202.30 && degree < 247.30) {
+            return "SW";
+        } else if (degree >= 247.30 && degree <= 292.30) {
+            return "W";
+        } else if (degree > 292.30 && degree < 337.30) {
+            return "NW";
+        } else {
+            throw new WrongDataException("Bad value of wind direction degree");
         }
     }
-
-    String getQuadrantName(double degree) {
-        for (QuadrantItem quadrantItem : quadrants)
-            if (quadrantItem.isIn(degree))
-                return quadrantItem.m_quadrantName;
-        return "";
-    }
-
-    public static class QuadrantItem {
-        String m_quadrantName;
-        String m_operation; //or , and
-        double m_left;
-        double m_right;
-        HashMap<String, QuadrantItem> quadrants;
-
-        QuadrantItem(String name, double left, double right, String operation) {
-            m_quadrantName = name;
-            m_operation = operation;
-            m_left = left;
-            m_right = right;
-        }
-
-        boolean isIn(double degree) {
-            if (m_operation == "and")
-                return degree > m_left && degree < m_right;
-            else
-                return degree > m_left || degree < m_right;
-        }
-    }
-
 }
+
 

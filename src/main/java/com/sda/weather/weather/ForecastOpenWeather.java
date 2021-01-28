@@ -7,28 +7,31 @@ import java.util.List;
 
 @Data
 public class ForecastOpenWeather {
-
     private List<SingleForecast> list;
 
     @Data
     public static class SingleForecast {
-        private Main main;
-        private Wind wind;
-
         @JsonProperty("dt_txt")
         private String date;
-    }
-
-    @Data
-    public static class Wind {
-        private double speed;
-        private int deg;
+        private Main main;
+        private Wind wind;
     }
 
     @Data
     public static class Main {
-        private float temp;
-        private int pressure;
-        private int humidity;
+        @JsonProperty("temp")
+        private String temperature;
+        @JsonProperty("pressure")
+        private String airPressure;
+        @JsonProperty("humidity")
+        private String airHumidity;
+    }
+
+    @Data
+    public static class Wind {
+        @JsonProperty("speed")
+        private String windDirection;
+        @JsonProperty("deg")
+        private String windSpeed;
     }
 }

@@ -18,11 +18,11 @@ public class Forecast {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant forecastDate;
-    private float temperature;
-    private int humidity;
-    private double windSpeed;
-    private int airPressure;
-    private double windDirect;
+    private String temperature;
+    private String humidity;
+    private String windSpeed;
+    private String airPressure;
+    private String windDirect;
     @ManyToOne
     private Localization localizations;
 }

@@ -2,6 +2,8 @@ package com.sda.weather.weather;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sda.weather.exception.CriticalError;
+import com.sda.weather.exception.NotFoundException;
 import com.sda.weather.localization.Localization;
 import com.sda.weather.localization.LocalizationFetchService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ class ForecastService {
     private final ForecastRepository forecastRepository;
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
+    private final DateManager dateManager;
+    private final ForecastMapper forecastMapper;
 
     Forecast getForecast(Long id, Integer period) {
         Localization localization = localizationFetchService.fetchLocalization(id);
@@ -38,48 +42,24 @@ class ForecastService {
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String response = entity.getBody();
 
-        if (!entity.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("unable to connect to server");
-        }
-
-        ForecastOpenWeather forecastOpenWeather = null;
         try {
-            forecastOpenWeather = objectMapper.readValue(response, ForecastOpenWeather.class);
-            LocalDate now = LocalDate.now();
-            LocalDate forecacastDate = now.plusDays(period);
-            LocalDateTime localDateTime = forecacastDate.atTime(12, 00, 00);
-            List<ForecastOpenWeather.SingleForecast> singleForecasts = forecastOpenWeather.getList();
-            return singleForecasts.stream()
-                    .filter(sf -> maptoLocalDateTime(sf.getDate()).isEqual(localDateTime))
-                    .map(sf -> mapToForecast(sf))
-                    .findFirst();
+            ForecastOpenWeather forecast = objectMapper.readValue(response, ForecastOpenWeather.class);
+            ForecastOpenWeather.SingleForecast forecastFromSingleForecast = forecast
+                    .getList()
+                    .stream()
+                    .filter(singleForecast -> dateManager.localDateTimeConverter(singleForecast.getDate())
+                            .equals(dateManager.nowDatePlusPeriod(period)))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Cannot find forecast for " + cityName));
+            return forecastRepository
+                    .save(forecastMapper.mapToNewForecast(forecastFromSingleForecast, localization));
 
-        } catch (JsonProcessingException jsonProcessingException) {
-            jsonProcessingException.printStackTrace();
-
+        } catch (JsonProcessingException e) {
+            throw new CriticalError("Critical error: " + e.getMessage());
         }
-        return ()
     }
 
 
-    private Forecast mapToForecast(ForecastOpenWeather.SingleForecast singleForecast) {
-        LocalDateTime forecastDate = maptoLocalDateTime(singleForecast.getDate());
-        Instant forecastDateInstant = forecastDate.atZone(ZoneId.systemDefault()).toInstant();
-
-        Forecast forecast = new Forecast();
-        forecast.setWindSpeed(singleForecast.getWind().getSpeed());
-        forecast.setWindDirect(singleForecast.getWind().getDeg());
-        forecast.setTemperature(singleForecast.getMain().getTemp());
-        forecast.setHumidity(singleForecast.getMain().getHumidity());
-        forecast.setAirPressure(singleForecast.getMain().getPressure());
-        forecast.setForecastDate(forecastDateInstant);
-        return forecast;
-    }
-
-    private LocalDateTime maptoLocalDateTime(String date) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(date, dateTimeFormatter);
-    }
 }
 
 
