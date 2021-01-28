@@ -35,7 +35,7 @@ class LocalizationIntegrationTest {
         localizationRepository.deleteAll();
         LocalizationDTO localizationDTO = new LocalizationDTO(null, "Gdansk", "Poland", "Pomorskie", 40.00, 22.00);
         String request = objectMapper.writeValueAsString(localizationDTO);
-        MockHttpServletRequestBuilder post = post("/localization")
+        MockHttpServletRequestBuilder post = post("/localization").with(user("luk").roles("ADMIN"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request);
 
