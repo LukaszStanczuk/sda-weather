@@ -27,7 +27,7 @@ class ForecastController {
 //    }
 
     @GetMapping("localization/{id}/forecast")
-    ForecastDto getForecastByIdLocalization(@PathVariable Long id, @RequestParam(required = false, defaultValue = "1") @Min(1) @Max(5) @Valid Integer period) {
+    ForecastDto getForecastByIdLocalization(@PathVariable Long id, @RequestParam(required = false, defaultValue = "1") @Min(1) @Max(5) Integer period) {
         return forecastMapper.mapToForecastDto(forecastService.getForecast(id, period));
     }
 }
